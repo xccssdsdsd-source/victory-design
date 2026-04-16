@@ -1,14 +1,32 @@
 const header = document.getElementById('site-header')
 const heroSection = document.getElementById('hero')
+const heroImg = heroSection?.querySelector('.hero-img')
 const navToggle = document.getElementById('nav-toggle')
 const navMobile = document.getElementById('nav-mobile')
 
 const headerObserver = new IntersectionObserver(
   ([entry]) => header.classList.toggle('scrolled', !entry.isIntersecting),
-  { threshold: 0, rootMargin: '-72px 0px 0px 0px' }
+  { threshold: 0, rootMargin: '-84px 0px 0px 0px' }
 )
 
 if (heroSection) headerObserver.observe(heroSection)
+
+if (heroImg) {
+  let ticking = false
+  const onScroll = () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const scrolled = window.scrollY
+        if (scrolled < window.innerHeight) {
+          heroImg.style.transform = `scale(1) translateY(${-scrolled * 0.22}px)`
+        }
+        ticking = false
+      })
+      ticking = true
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true })
+}
 
 navToggle?.addEventListener('click', () => {
   const open = navMobile.classList.toggle('open')
